@@ -37,6 +37,9 @@ make %{?jobs:-j%jobs}
 
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/license
+cp %{_builddir}/%{name}-%{version}/LICENSE %{buildroot}/usr/share/license/%{name}
+
 %make_install
 
 %post -p /sbin/ldconfig
@@ -46,11 +49,10 @@ rm -rf %{buildroot}
 
 %files
 %manifest capi-location-manager.manifest
+/usr/share/license/%{name}
 %{_libdir}/libcapi-location-manager.so.*
 
 %files devel
 %{_includedir}/location/*.h
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/libcapi-location-manager.so
-
-
