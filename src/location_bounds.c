@@ -17,8 +17,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <location_bounds.h>
-#include <locations_private.h>
+#include "location_bounds.h"
+#include "location_internal.h"
 
 
 #define LOCATIONS_NULL_ARG_CHECK(arg)	\
@@ -191,21 +191,28 @@ EXPORT_API int location_bounds_create_polygon(location_coords_s * coords_list, i
 
 EXPORT_API bool location_bounds_contains_coordinates(location_bounds_h bounds, location_coords_s coords)
 {
-	if (!bounds)
+	if (!bounds) {
+		set_last_result(LOCATION_BOUNDS_ERROR_INVALID_PARAMETER);
 		return FALSE;
+	}
 
-	if (coords.latitude < -90 || coords.latitude > 90 || coords.longitude < -180 || coords.longitude > 180)
+	if (coords.latitude < -90 || coords.latitude > 90 || coords.longitude < -180 || coords.longitude > 180) {
+		set_last_result(LOCATION_BOUNDS_ERROR_INVALID_PARAMETER);
 		return FALSE;
+	}
 
 	LocationPosition *pos = location_position_new(0, coords.latitude, coords.longitude, 0, LOCATION_STATUS_2D_FIX);
 	if (pos == NULL) {
 		LOCATIONS_LOGE("LOCATION_BOUNDS_ERROR_OUT_OF_MEMORY(0x%08x) : fail to location_position_new", LOCATION_BOUNDS_ERROR_OUT_OF_MEMORY);
+		set_last_result(LOCATION_BOUNDS_ERROR_OUT_OF_MEMORY);
 		return FALSE;
 	}
 	location_bounds_s *handle = (location_bounds_s *) bounds;
 	gboolean is_inside = location_boundary_if_inside(handle->boundary, pos);
 	location_position_free(pos);
 	bool result = is_inside ? TRUE : FALSE;
+
+	set_last_result(LOCATION_BOUNDS_ERROR_NONE);
 	return result;
 }
 

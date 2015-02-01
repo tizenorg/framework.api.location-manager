@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef __TIZEN_LOCATION_LOCATIONS_PRIVATE_H__
-#define	__TIZEN_LOCATION_LOCATIONS_PRIVATE_H__
+#ifndef __TIZEN_LOCATION_INTERNAL_H__
+#define	__TIZEN_LOCATION_INTERNAL_H__
 
-#include <location/location.h>
+#include <location.h>
 #include <locations.h>
 #include <dlog.h>
 
@@ -29,10 +29,11 @@
 /*
 * Internal Macros
 */
-#define LOCATIONS_LOGD(fmt,args...)  LOGD(fmt, ##args)
-#define LOCATIONS_LOGW(fmt,args...)  LOGW(fmt, ##args)
-#define LOCATIONS_LOGI(fmt,args...)  LOGI(fmt, ##args)
-#define LOCATIONS_LOGE(fmt,args...)  LOGE(fmt, ##args)
+
+#define LOCATIONS_LOGD(fmt,args...) LOGD(fmt, ##args)
+#define LOCATIONS_LOGW(fmt,args...) LOGW(fmt, ##args)
+#define LOCATIONS_LOGI(fmt,args...) LOGI(fmt, ##args)
+#define LOCATIONS_LOGE(fmt,args...) LOGE(fmt, ##args)
 
 #define LOCATIONS_CHECK_CONDITION(condition, error, msg)	\
 		do { \
@@ -62,6 +63,9 @@ typedef enum {
 	_LOCATIONS_EVENT_TYPE_BOUNDARY,
 	_LOCATIONS_EVENT_TYPE_SATELLITE,
 	_LOCATIONS_EVENT_TYPE_FOREACH_BOUNDS,
+	_LOCATIONS_EVENT_TYPE_COLLECTION_STATE,
+	_LOCATIONS_EVENT_TYPE_LOCATION,
+	_LOCATIONS_EVENT_TYPE_BATCH,
 	_LOCATIONS_EVENT_TYPE_NUM
 } _location_event_e;
 
@@ -71,6 +75,9 @@ typedef enum {
 	_LOCATION_SIGNAL_SERVICE_UPDATED,
 	_LOCATION_SIGNAL_ZONE_IN,
 	_LOCATION_SIGNAL_ZONE_OUT,
+	_LOCATION_SIGNAL_LOCATION_UPDATED,
+	_LOCATION_SIGNAL_BATCH_UPDATED,
+	_LOCATION_SIGNAL_ERROR_EMITTED,
 	_LOCATION_SIGNAL_NUM
 } _location_signal_e;
 
@@ -80,7 +87,9 @@ typedef struct _location_manager_s {
 	void* user_data[_LOCATIONS_EVENT_TYPE_NUM];
 	location_method_e method;
 	bool is_continue_foreach_bounds;
+	int collection_state;
 	GList *bounds_list;
+	guint timeout;
 	gulong sig_id[_LOCATION_SIGNAL_NUM];
 } location_manager_s;
 
@@ -90,8 +99,15 @@ typedef struct _location_bounds_s {
 	void* user_data;
 	bool is_added;
 } location_bounds_s;
+
+typedef struct _location_setting_changed_s {
+	location_setting_changed_cb callback;
+	void *user_data;
+} location_setting_changed_s;
+
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif //__TIZEN_LOCATION_LOCATIONS_PRIVATE_H__
+#endif /* __TIZEN_LOCATION_INTERNAL_H__ */

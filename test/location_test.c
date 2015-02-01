@@ -21,10 +21,13 @@
 #include <locations.h>
 #include <location_bounds.h>
 
+
+//#define COMPANION_TEST
 location_manager_h manager;
 
+#if 0
 void zone_event_cb(location_boundary_state_e state, double latitude, double longitude, double altitude, time_t timestamp,
-		   void *user_data)
+			void *user_data)
 {
 	if (state == LOCATIONS_BOUNDARY_IN) {
 		printf("Entering zone\n");
@@ -39,18 +42,18 @@ void zone_event_cb(location_boundary_state_e state, double latitude, double long
 }
 
 static bool satellites_foreach_cb(unsigned int azimuth, unsigned int elevation, unsigned int prn, int snr, bool is_in_use,
-				  void *user_data)
+					void *user_data)
 {
-	printf("[Satellite information]  azimuth  : %d, elevation : %d, prn :%d, snr : %d, used: %d\n", azimuth, elevation, prn,
-	       snr, is_in_use);
+	printf("[Satellite information]	azimuth	: %d, elevation : %d, prn :%d, snr : %d, used: %d\n", azimuth, elevation, prn,
+			snr, is_in_use);
 	return true;
 }
 
 static bool last_satellites_foreach_cb(unsigned int azimuth, unsigned int elevation, unsigned int prn, int snr, bool is_in_use,
-				       void *user_data)
+						void *user_data)
 {
-	printf("[Last Satellite information]  azimuth  : %d, elevation : %d, prn :%d, snr : %d, used: %d\n", azimuth, elevation,
-	       prn, snr, is_in_use);
+	printf("[Last Satellite information]	azimuth	: %d, elevation : %d, prn :%d, snr : %d, used: %d\n", azimuth, elevation,
+			prn, snr, is_in_use);
 	return true;
 }
 
@@ -123,14 +126,14 @@ static bool __location_bounds_cb(location_bounds_h bounds, void *user_data)
 			double radius;
 			location_bounds_get_circle_coords(bounds, &center, &radius);
 			printf("location_bounds_get_circle_coords(center : %lf, %lf, radius : %lf) \n", center.latitude,
-			       center.longitude, radius);
+					center.longitude, radius);
 
 		} else if (type == LOCATION_BOUNDS_RECT) {
 			location_coords_s left_top;
 			location_coords_s right_bottom;
 			location_bounds_get_rect_coords(bounds, &left_top, &right_bottom);
 			printf("location_bounds_get_rect_coords(left_top : %lf, %lf - right_bottom : %lf, %lf) \n",
-			       left_top.latitude, left_top.longitude, right_bottom.latitude, right_bottom.longitude);
+					left_top.latitude, left_top.longitude, right_bottom.latitude, right_bottom.longitude);
 		} else if (type == LOCATION_BOUNDS_POLYGON) {
 			location_bounds_foreach_polygon_coords(bounds, __poly_coords_cb, NULL);
 		}
@@ -165,7 +168,7 @@ void location_bounds_test()
 		printf("location_bounds_get_circle_coords() failed\n");
 	} else
 		printf("location_bounds_get_circle_coords(center : %lf, %lf, radius : %lf) \n", center2.latitude,
-		       center2.longitude, radius2);
+				center2.longitude, radius2);
 
 	//Add the rect bounds
 	location_coords_s left_top;
@@ -197,7 +200,7 @@ void location_bounds_test()
 		printf("location_bounds_get_rect_coords() failed\n");
 	} else
 		printf("location_bounds_get_rect_coords(left_top : %lf, %lf - right_bottom : %lf, %lf) \n", left_top2.latitude,
-		       left_top2.longitude, right_bottom2.latitude, right_bottom2.longitude);
+				left_top2.longitude, right_bottom2.latitude, right_bottom2.longitude);
 
 	//Add the polygon bounds
 
@@ -289,25 +292,95 @@ void location_get_last_information_test()
 		printf(" Fail : gps_status_foreach_last_satellites_in_view ---> %d \n", ret);
 	}
 }
+#endif
+
+#ifdef COMPANION_TEST
+static void select_menu(char* buf)
+{
+	int len = 0;
+	char *str = NULL;
+	str = fgets(buf, 255, stdin);
+	if (NULL == str) {
+		printf("fgets return NULL. \n");
+	}
+	len = g_utf8_strlen(buf, -1);
+	buf[len-1] = '\0';
+}
+
+void print_menu()
+{
+	printf("==== companion gps/wps test ======\n");
+	printf("[1] LOCATIONS_METHOD_COMPANION_WPS, request_single_location\n");
+	printf("[2] LOCATIONS_METHOD_COMPANION_GPS, request_single_location\n");
+}
+#endif
+
+void location_cb(int error, double latitude, double longitude, double altitude, time_t timestamp, double speed, double climb, double direction, void *user_data)
+{
+	printf("error[%d]\n", error);
+	printf("location_cb : lat[%f] lon[%f] alt[%f]\n", latitude, longitude, altitude);
+	printf("speed[%f] climb[%f] direction[%f]\n", speed, climb, direction);
+}
+
+static void __setting_cb(location_method_e method, bool enable, void *user_data)
+{
+	printf("method[%d], enable[%d]\n", method, enable);
+}
 
 int location_test()
 {
-	int ret;
-	ret = location_manager_create(LOCATIONS_METHOD_GPS, &manager);
-	printf("create : %d\n", ret);
+//	char menu[255];
+	/*
+	while(1) {
+		print_menu();
+		printf("Select menu :");
+		select_menu(menu);
+		if (strcmp(menu, "1") == 0) {
+			int ret;
+			ret = location_manager_create(LOCATIONS_METHOD_COMPANION_WPS, &manager);
+			printf("LOCATIONS_METHOD_COMPANION_WPS create : %d\n", ret);
+			ret = location_manager_request_single_location(manager, 30, location_cb, manager);
+			printf("request single :	%d\n", ret);
+			return 0;
+		} else if (strcmp(menu, "2") == 0) {
+			int ret;
+			ret = location_manager_create(LOCATIONS_METHOD_COMPANION_GPS, &manager);
+			printf("LOCATIONS_METHOD_COMPANION_GPS create : %d\n", ret);
+			ret = location_manager_request_single_location(manager, 30, location_cb, manager);
+			printf("request single :	%d\n", ret);
+			return 0 ;
+		}
+	}
+	*/
+//	location_bounds_test();
+//	location_get_last_information_test();
+	printf("location_manager_is_enabled_method TEST\n");
+	bool is_enabled = FALSE;
+	location_manager_is_enabled_method(LOCATIONS_METHOD_HYBRID, &is_enabled);
+	printf("hybrid : %d\n", is_enabled);
 
-	location_bounds_test();
-	location_get_last_information_test();
+	location_manager_is_enabled_method(LOCATIONS_METHOD_GPS, &is_enabled);
+	printf("gps : %d\n", is_enabled);
+
+	location_manager_is_enabled_method(LOCATIONS_METHOD_WPS, &is_enabled);
+	printf("wps : %d\n", is_enabled);
+
+	location_manager_set_setting_changed_cb(LOCATIONS_METHOD_GPS, __setting_cb, NULL);
+	location_manager_set_setting_changed_cb(LOCATIONS_METHOD_WPS, __setting_cb, NULL);
+
 
 	//set zone changed callback
-	ret = location_manager_set_zone_changed_cb(manager, zone_event_cb, (void *)manager);
-	printf("set zone callback : %d\n", ret);
+//	ret = location_manager_set_zone_changed_cb(manager, zone_event_cb, (void *)manager);
+//	printf("set zone callback : %d\n", ret);
 
-	ret = location_manager_set_service_state_changed_cb(manager, _state_change_cb, (void *)manager);
-	printf("set state callback : %d\n", ret);
+//	ret = location_manager_set_service_state_changed_cb(manager, _state_change_cb, (void *)manager);
+//	printf("set state callback : %d\n", ret);
 
-	ret = location_manager_start(manager);
-	printf("start :  %d\n", ret);
+//	ret = location_manager_start(manager);
+//	printf("start :	%d\n", ret);
+
+
+
 	return 1;
 }
 
@@ -319,12 +392,14 @@ static gboolean exit_program(gpointer data)
 		printf("manager == NULL \n");
 	} else {
 		int ret = location_manager_stop(manager);
-		printf("stop :  %d\n", ret);
+		printf("stop :	%d\n", ret);
 		ret = location_manager_destroy(manager);
-		printf("destroy :  %d\n", ret);
+		printf("destroy :	%d\n", ret);
 	}
 	g_main_loop_quit(g_mainloop);
 	printf("Quit g_main_loop\n");
+	location_manager_unset_setting_changed_cb(LOCATIONS_METHOD_GPS);
+	location_manager_unset_setting_changed_cb(LOCATIONS_METHOD_WPS);
 	return FALSE;
 }
 
