@@ -35,8 +35,7 @@ extern "C" {
  * @brief The structure type to represent coordinates with latitude and longitude.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef struct
-{
+typedef struct {
 	double latitude;	/**< The latitude [-90.0 ~ 90.0] (degrees) */
 	double longitude;	/**< The longitude [-180.0 ~ 180.0] (degrees) */
 } location_coords_s;
@@ -44,8 +43,7 @@ typedef struct
 /**
  * @brief Enumeration for error code for Location manager.
  */
-typedef enum
-{
+typedef enum {
 	LOCATION_BOUNDS_ERROR_NONE = TIZEN_ERROR_NONE,								/**< Successful */
 	LOCATION_BOUNDS_ERROR_OUT_OF_MEMORY = TIZEN_ERROR_OUT_OF_MEMORY,			/**< Out of memory */
 	LOCATION_BOUNDS_ERROR_INVALID_PARAMETER = TIZEN_ERROR_INVALID_PARAMETER,	/**< Invalid parameter */
@@ -58,8 +56,7 @@ typedef enum
  * @brief Enumeration for Location boundary type.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
+typedef enum {
 	LOCATION_BOUNDS_RECT = 1,		/**< Rectangular geographical area type. */
 	LOCATION_BOUNDS_CIRCLE,			/**< Circle geographical area type.. */
 	LOCATION_BOUNDS_POLYGON,		/**< Polygon geographical area type.. */
@@ -69,8 +66,7 @@ typedef enum
  * @brief Enumeration for the boundary state.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
+typedef enum {
 	LOCATIONS_BOUNDARY_IN,			/**< Boundary In (Zone In) */
 	LOCATIONS_BOUNDARY_OUT			/**< Boundary Out (Zone Out) */
 } location_boundary_state_e;
@@ -118,7 +114,7 @@ typedef void (*location_bounds_state_changed_cb)(location_boundary_state_e state
  * @see location_bounds_get_rect_coords()
  * @see location_bounds_destroy()
  */
-int location_bounds_create_rect(location_coords_s top_left, location_coords_s bottom_right, location_bounds_h* bounds);
+int location_bounds_create_rect(location_coords_s top_left, location_coords_s bottom_right, location_bounds_h *bounds);
 
 /**
  * @brief Creates a circle type of new location bounds.
@@ -135,7 +131,7 @@ int location_bounds_create_rect(location_coords_s top_left, location_coords_s bo
  * @see location_bounds_get_circle_coords()
  * @see location_bounds_destroy()
  */
-int location_bounds_create_circle(location_coords_s center, double radius, location_bounds_h* bounds);
+int location_bounds_create_circle(location_coords_s center, double radius, location_bounds_h *bounds);
 
 /**
  * @brief Creates a polygon type of new location bounds.
@@ -153,7 +149,7 @@ int location_bounds_create_circle(location_coords_s center, double radius, locat
  * @see location_bounds_foreach_polygon_coords()
  * @see location_bounds_destroy()
  */
-int location_bounds_create_polygon(location_coords_s* coords_list, int length, location_bounds_h* bounds);
+int location_bounds_create_polygon(location_coords_s *coords_list, int length, location_bounds_h *bounds);
 
 /**
  * @brief Checks whether the bounds contains the specified coordinates.
@@ -221,7 +217,7 @@ int location_bounds_get_circle_coords(location_bounds_h bounds, location_coords_
  * @brief Get the coordinates of a polygon.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] bounds		The location bounds handle
- * @param[in] callback		The geocoder get position callback function
+ * @param[in] callback		The iteration callback
  * @param[in] user_data		The user data to be passed to the callback function
  * @return @c 0 on success, otherwise a negative error value.
  * @retval #LOCATION_BOUNDS_ERROR_NONE Successful
@@ -262,7 +258,7 @@ int location_bounds_destroy(location_bounds_h bounds);
  * @see location_bounds_unset_state_changed_cb()
  * @see location_bounds_state_changed_cb()
  */
-int location_bounds_set_state_changed_cb(location_bounds_h bounds, location_bounds_state_changed_cb callback, void* user_data);
+int location_bounds_set_state_changed_cb(location_bounds_h bounds, location_bounds_state_changed_cb callback, void *user_data);
 
 /**
  * @brief	Unregisters the callback function.

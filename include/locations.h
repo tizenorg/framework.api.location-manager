@@ -35,39 +35,37 @@ extern "C" {
  * @brief Enumeration for error code for Location manager.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-	LOCATIONS_ERROR_NONE						= TIZEN_ERROR_NONE,							/**< Successful */
-	LOCATIONS_ERROR_OUT_OF_MEMORY				= TIZEN_ERROR_OUT_OF_MEMORY,				/**< Out of memory */
-	LOCATIONS_ERROR_INVALID_PARAMETER			= TIZEN_ERROR_INVALID_PARAMETER,			/**< Invalid parameter */
-	LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED	= TIZEN_ERROR_PERMISSION_DENIED,			/**< Permission denied */
-	LOCATIONS_ERROR_NOT_SUPPORTED				= TIZEN_ERROR_NOT_SUPPORTED,				/**< Not supported */
-	LOCATIONS_ERROR_INCORRECT_METHOD			= TIZEN_ERROR_LOCATION_MANAGER | 0x01,		/**< Location manager contains incorrect method for a given call */
-	LOCATIONS_ERROR_NETWORK_FAILED				= TIZEN_ERROR_LOCATION_MANAGER | 0x02,		/**< Network unavailable */
-	LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE		= TIZEN_ERROR_LOCATION_MANAGER | 0x03,		/**< Location service is not available */
-	LOCATIONS_ERROR_GPS_SETTING_OFF				= TIZEN_ERROR_LOCATION_MANAGER | 0x04,		/**< GPS/WPS setting is not enabled */
-	LOCATIONS_ERROR_SECURITY_RESTRICTED			= TIZEN_ERROR_LOCATION_MANAGER | 0x05,		/**< Restricted by security system policy */
+typedef enum {
+	LOCATIONS_ERROR_NONE						= TIZEN_ERROR_NONE,						/**< Successful */
+	LOCATIONS_ERROR_OUT_OF_MEMORY				= TIZEN_ERROR_OUT_OF_MEMORY,			/**< Out of memory */
+	LOCATIONS_ERROR_INVALID_PARAMETER			= TIZEN_ERROR_INVALID_PARAMETER,		/**< Invalid parameter */
+	LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED	= TIZEN_ERROR_PERMISSION_DENIED,		/**< Permission denied */
+	LOCATIONS_ERROR_NOT_SUPPORTED				= TIZEN_ERROR_NOT_SUPPORTED,			/**< Not supported */
+	LOCATIONS_ERROR_INCORRECT_METHOD			= TIZEN_ERROR_LOCATION_MANAGER | 0x01,	/**< Location manager contains incorrect method for a given call */
+	LOCATIONS_ERROR_NETWORK_FAILED				= TIZEN_ERROR_LOCATION_MANAGER | 0x02,	/**< Network unavailable */
+	LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE		= TIZEN_ERROR_LOCATION_MANAGER | 0x03,	/**< Location service is not available */
+	LOCATIONS_ERROR_GPS_SETTING_OFF				= TIZEN_ERROR_LOCATION_MANAGER | 0x04,	/**< GPS/WPS setting is not enabled */
+	LOCATIONS_ERROR_SECURITY_RESTRICTED			= TIZEN_ERROR_LOCATION_MANAGER | 0x05,	/**< Restricted by security system policy */
 } location_error_e;
+
 
 /**
  * @brief Enumeration for Location method type.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-	LOCATIONS_METHOD_NONE=-1,   /**< Undefined method. */
-	LOCATIONS_METHOD_HYBRID,    /**< This method selects the best method available at the moment. */
-	LOCATIONS_METHOD_GPS,       /**< This method uses Global Positioning System. */
-	LOCATIONS_METHOD_WPS,       /**< This method uses WiFi Positioning System. */
+typedef enum {
+	LOCATIONS_METHOD_NONE = -1,	/**< Undefined method */
+	LOCATIONS_METHOD_HYBRID,	/**< This method selects the best method available at the moment */
+	LOCATIONS_METHOD_GPS,		/**< This method uses Global Positioning System */
+	LOCATIONS_METHOD_WPS,		/**< This method uses WiFi Positioning System */
 } location_method_e;
 
 /**
  * @brief Enumeration for Approximate accuracy level of given information.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-	LOCATIONS_ACCURACY_NONE=0,		/**< Invalid data */
+typedef enum {
+	LOCATIONS_ACCURACY_NONE = 0,	/**< Invalid data */
 	LOCATIONS_ACCURACY_COUNTRY,		/**< Country accuracy level */
 	LOCATIONS_ACCURACY_REGION,		/**< Regional accuracy level */
 	LOCATIONS_ACCURACY_LOCALITY,	/**< Local accuracy level */
@@ -80,18 +78,16 @@ typedef enum
  * @brief Enumeration for the state of the location service.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-	LOCATIONS_SERVICE_DISABLED, /**< Service is disabled */
-	LOCATIONS_SERVICE_ENABLED,  /**< Service is enabled */
+typedef enum {
+	LOCATIONS_SERVICE_DISABLED,			/**< Service is disabled */
+	LOCATIONS_SERVICE_ENABLED,			/**< Service is enabled */
 } location_service_state_e;
 
 /**
  * @brief Enumeration for the location service accessibility state.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
+typedef enum {
 	LOCATIONS_ACCESS_STATE_NONE,		/**< Access state is not determined */
 	LOCATIONS_ACCESS_STATE_DENIED,		/**< Access denied */
 	LOCATIONS_ACCESS_STATE_ALLOWED,		/**< Access authorized */
@@ -200,7 +196,7 @@ typedef void(*location_zone_changed_cb)(location_boundary_state_e state, double 
 typedef void(*location_setting_changed_cb)(location_method_e method, bool enable, void *user_data);
 
 /**
- * @brief Gets called iteratively to notify you of location bounds.
+ * @brief Called once for each location bound.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] bounds		The location bounds handle
  * @param[in] user_data		The user data passed from the callback registration function
@@ -210,14 +206,32 @@ typedef void(*location_setting_changed_cb)(location_method_e method, bool enable
 typedef bool(*location_bounds_cb)(location_bounds_h bounds, void *user_data);
 
 /**
+ * @brief Called at defined interval with updated location information.
+ * @since_tizen 2.4
+ * @param[in] latitude		The updated latitude [-90.0 ~ 90.0] (degrees)
+ * @param[in] longitude		The updated longitude [-180.0 ~ 180.0] (degrees)
+ * @param[in] altitude		The updated altitude (meters)
+ * @param[in] speed			The updated speed (km/h)
+ * @param[in] direction		The updated direction (in degrees from the north)
+ * @param[in] horizontal_accuracy		The horizontal accuracy (meters)
+ * @param[in] timestamp		The timestamp (time when measurement took place or @c 0 if valid)
+ * @param[in] user_data		The user data passed from the callback registration function
+ * @pre location_manager_start() will invoke this callback if you register this callback using location_manager_set_position_updated_cb()
+ * @see location_manager_start()
+ * @see location_manager_set_distance_based_location_changed_cb()
+ * @see location_manager_set_location_changed_cb()
+ */
+typedef void(*location_changed_cb)(double latitude, double longitude, double altitude, double speed, double direction, double horizontal_accuracy, time_t timestamp, void *user_data);
+
+/**
  * @brief Checks whether the given location method is available.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @remark The specific error code can be obtained using the get_last_result() method. Error codes are described in Exception section.
  * @param[in] method The location method to be checked
  * @return @c true if the specified location method is supported, otherwise @c false if it is not available
- * @exception #LOCATIONS_ERROR_NONE Successful
- * @exception #LOCATIONS_ERROR_NOT_SUPPORTED Not supported
- * @exception #LOCATIONS_ERROR_INCORRECT_METHOD Incorrect method
+ * @retval #LOCATIONS_ERROR_NONE Successful
+ * @retval #LOCATIONS_ERROR_NOT_SUPPORTED Not supported
+ * @retval #LOCATIONS_ERROR_INCORRECT_METHOD Incorrect method
  * @see	location_manager_create()
  * @see location_manager_get_method()
  */
@@ -228,7 +242,7 @@ bool location_manager_is_supported_method(location_method_e method);
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] method		The location method to be checked
  * @param[out] enable		The result value of checking the given location method
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE Successful
  * @retval #LOCATIONS_ERROR_INCORRECT_METHOD Incorrect method
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
@@ -245,12 +259,12 @@ int location_manager_is_enabled_method(location_method_e method, bool *enable);
  * @since_tizen 2.3.1
  * @privlevel platform
  * @privilege %http://tizen.org/privilege/location.enable
- * @param[in] method        The location method to be checked
- * @param[in] enable        The value to set
- * @return 0 on success, otherwise a negative error value.
+ * @param[in] method		The location method to be checked
+ * @param[in] enable		The value to set
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE Successful
  * @retval #LOCATIONS_ERROR_INCORRECT_METHOD Incorrect method
- * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED  Permission denied
+ * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED Permission denied
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED	Not supported
  * @see location_manager_is_enabled_method()
  * @see location_manager_create()
@@ -271,7 +285,7 @@ int location_manager_enable_method(const location_method_e method, const bool en
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED	Not supported
  * @see location_manager_destroy()
  */
-int location_manager_create(location_method_e method, location_manager_h* manager);
+int location_manager_create(location_method_e method, location_manager_h *manager);
 
 /**
  * @brief Releases the location manager.
@@ -329,7 +343,7 @@ int location_manager_request_single_location(location_manager_h manager, int tim
  *		starting and stopping should be executed for each of them separately).
  *
  * @param[in] manager		The location manager handle
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid parameter
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
@@ -359,10 +373,10 @@ int location_manager_start(location_manager_h manager);
  * #location_manager_set_service_state_changed_cb() will be called, with #LOCATIONS_SERVICE_DISABLED as first argument.
  * When that happens, the service is stopped and the user is notified.
  *
- * You can stop and start the location manager as needed.
+ * @remarks You can stop and start the location manager as needed.
  *
  * @param[in] manager		The location manager handle
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE						Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER			Invalid parameter
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE		Service not available
@@ -410,7 +424,7 @@ int location_manager_remove_boundary(location_manager_h manager, const location_
  * @param[in] manager		The location manager handle
  * @param[in] callback		The iteration callback
  * @param[in] user_data		The user data to be passed to the callback function
- * @return	@c 0 on success, otherwise a negative error value.
+ * @return	@c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE						Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER			Invalid parameter
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED				Not supported
@@ -426,7 +440,7 @@ int location_manager_foreach_boundary(location_manager_h manager, location_bound
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] manager		The location manager handle
  * @param[out] method		The location method
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -446,7 +460,7 @@ int location_manager_get_method(location_manager_h manager, location_method_e *m
  * @param[out] latitude		The current latitude [-90.0 ~ 90.0] (degrees)
  * @param[out] longitude	The current longitude [-180.0 ~ 180.0] (degrees)
  * @param[out] timestamp	The timestamp (time when measurement took place or @c 0 if valid)
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
@@ -475,7 +489,7 @@ int location_manager_get_position(location_manager_h manager, double *altitude, 
  * @param[out] horizontal	The horizontal accuracy (meters)
  * @param[out] vertical		The vertical accuracy (meters)
  * @param[out] timestamp	The timestamp (time when measurement took place or @c 0 if valid)
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
@@ -518,7 +532,7 @@ int location_manager_get_velocity(location_manager_h manager, double *climb, dou
  * @param[out] level		The accuracy level
  * @param[out] horizontal	The horizontal accuracy (meters)
  * @param[out] vertical		The vertical accuracy (meters)
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
@@ -540,7 +554,7 @@ int location_manager_get_accuracy(location_manager_h manager, location_accuracy_
  * @param[out] latitude		The last latitude [-90.0 ~ 90.0] (degrees)
  * @param[out] longitude	The last longitude [-180.0 ~ 180.0] (degrees)
  * @param[out] timestamp	The timestamp (time when measurement took place or @c 0 if valid)
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid argument
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
@@ -566,7 +580,7 @@ int location_manager_get_last_position(location_manager_h manager, double *altit
  * @param[out] horizontal	The horizontal accuracy (meters)
  * @param[out] vertical		The vertical accuracy (meters)
  * @param[out] timestamp	The timestamp (time when measurement took place or @c 0 if valid)
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid argument
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
@@ -588,7 +602,7 @@ int location_manager_get_last_location(location_manager_h manager, double *altit
  * @param[out] direction	The last direction, degrees from the north
  * @param[out] speed		The last speed (km/h)
  * @param[out] timestamp	The timestamp (time when measurement took place or @c 0 if valid)
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid argument
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
@@ -606,7 +620,7 @@ int location_manager_get_last_velocity(location_manager_h manager, double *climb
  * @param[out] level		The last accuracy level
  * @param[out] horizontal	The last horizontal accuracy (meters)
  * @param[out] vertical		The last vertical accuracy (meters)
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid argument
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
@@ -619,13 +633,13 @@ int location_manager_get_last_accuracy(location_manager_h manager, location_accu
  * @brief Gets the current application's location accessibility status.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[out] state		The current location service accessibility status.
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED			Not supported
  */
-int location_manager_get_accessibility_state(location_accessibility_state_e* state);
+int location_manager_get_accessibility_state(location_accessibility_state_e *state);
 
 /**
  * @brief Registers a callback function to be invoked at defined interval with updated position information.
@@ -635,7 +649,7 @@ int location_manager_get_accessibility_state(location_accessibility_state_e* sta
  * @param[in] callback		The callback function to register
  * @param[in] interval		The interval [1 ~ 120] (seconds)
  * @param[in] user_data		The user data to be passed to the callback function
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -649,7 +663,7 @@ int location_manager_set_position_updated_cb(location_manager_h manager, locatio
  * @brief	Unregisters the callback function.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] manager		The location manager handle
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -664,7 +678,7 @@ int location_manager_unset_position_updated_cb(location_manager_h manager);
  * @param[in] callback		The callback function to register
  * @param[in] interval		The interval [1 ~ 120] (seconds)
  * @param[in] user_data		The user data to be passed to the callback function
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -678,7 +692,7 @@ int location_manager_set_velocity_updated_cb(location_manager_h manager, locatio
  * @brief	Unregisters the callback function.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] manager		The location manager handle
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -692,7 +706,7 @@ int location_manager_unset_velocity_updated_cb(location_manager_h manager);
  * @param[in] manager		The location manager handle
  * @param[in] callback		The callback function to register
  * @param[in] user_data		The user data to be passed to the callback function
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -709,7 +723,7 @@ int location_manager_set_service_state_changed_cb(location_manager_h manager, lo
  * @brief	Unregisters the callback function.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] manager		The location manager handle
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -724,7 +738,7 @@ int location_manager_unset_service_state_changed_cb(location_manager_h manager);
  * @param[in] manager		The location manager handle
  * @param[in] callback		The callback function to register
  * @param[in] user_data		The user data to be passed to the callback function
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -739,7 +753,7 @@ int location_manager_set_zone_changed_cb(location_manager_h manager, location_zo
  * @brief	Unregisters the callback function.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] manager		The location manager handle
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -753,7 +767,7 @@ int location_manager_unset_zone_changed_cb(location_manager_h manager);
  * @param[in] method		The method to observe
  * @param[in] callback		The callback function to register
  * @param[in] user_data		The user data to be passed to the callback function
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -767,7 +781,7 @@ int location_manager_set_setting_changed_cb(location_method_e method, location_s
  * @brief Unregisters the callback function.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @param[in] method		The method to observe
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval	#LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
@@ -783,12 +797,71 @@ int location_manager_unset_setting_changed_cb(location_method_e method);
  * @param[in] end_latitude			The ending latitude [-90.0 ~ 90.0] (degrees)
  * @param[in] end_longitude			The ending longitude [-180.0 ~ 180.0] (degrees)
  * @param[out] distance				The distance between two locations (meters)
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid argument
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
  */
 int location_manager_get_distance(double start_latitude, double start_longitude, double end_latitude, double end_longitude, double *distance);
+
+/**
+ * @brief Registers a callback function to be invoked at minimum interval or minimum distance with updated position information.
+ * @since_tizen 2.4
+ * @param[in] manager		The location manager handle
+ * @param[in] callback		The callback function to register
+ * @param[in] interval		The minimum interval between position updates [1 ~ 120] (seconds)
+ * @param[in] distance		The minimum distance between position updates [1 ~ 120] (meters)
+ * @param[in] user_data		The user data to be passed to the callback function
+ * @return @c 0 on success, otherwise a negative error value
+ * @retval #LOCATIONS_ERROR_NONE				Successful
+ * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
+ * @retval #LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
+ * @post location_changed_cb() will be invoked
+ * @see location_manager_unset_distance_based_location_changed_cb()
+ * @see location_changed_cb()
+ */
+int location_manager_set_distance_based_location_changed_cb(location_manager_h manager, location_changed_cb callback, int interval, double distance, void *user_data);
+
+/**
+ * @brief Unregisters the callback function.
+ * @since_tizen 2.4
+ * @param[in] manager		The location manager handle
+ * @return @c 0 on success, otherwise a negative error value
+ * @retval #LOCATIONS_ERROR_NONE				Successful
+ * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
+ * @retval #LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
+ * @see location_manager_set_distance_based_location_changed_cb()
+ */
+int location_manager_unset_distance_based_location_changed_cb(location_manager_h manager);
+
+/**
+ * @brief Registers a callback function to be invoked at defined interval with updated location information.
+ * @since_tizen 2.4
+ * @param[in] manager		The location manager handle
+ * @param[in] callback		The callback function to register
+ * @param[in] interval		The interval [1 ~ 120] (seconds)
+ * @param[in] user_data		The user data to be passed to the callback function
+ * @return @c 0 on success, otherwise a negative error value
+ * @retval #LOCATIONS_ERROR_NONE				Successful
+ * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
+ * @retval #LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
+ * @post location_changed_cb() will be invoked
+ * @see location_manager_unset_location_changed_cb()
+ * @see location_changed_cb()
+ */
+int location_manager_set_location_changed_cb(location_manager_h manager, location_changed_cb callback, int interval, void *user_data);
+
+/**
+ * @brief	Unregisters the callback function.
+ * @since_tizen 2.4
+ * @param[in] manager		The location manager handle
+ * @return @c 0 on success, otherwise a negative error value
+ * @retval #LOCATIONS_ERROR_NONE				Successful
+ * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
+ * @retval #LOCATIONS_ERROR_NOT_SUPPORTED		Not supported
+ * @see location_manager_set_location_changed_cb()
+ */
+int location_manager_unset_location_changed_cb(location_manager_h manager);
 
 /**
  * @}
@@ -839,12 +912,11 @@ typedef void(*gps_status_satellite_updated_cb)(int num_of_active, int num_of_inv
  *		 You must release @a nmea using @c free().
  * @param[in] manager	The location manager handle
  * @param[out] nmea		The NMEA data
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
- * @retval #LOCATIONS_ERROR_INCORRECT_METHOD		Incorrect method
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
- * @retval #LOCATIONS_ERROR_OUT_OF_MEMORY			Out of memory
+ * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED			Not supported
  * @pre The location service state must be #LOCATIONS_SERVICE_ENABLED with location_manager_start()
  * @see location_manager_start()
@@ -861,10 +933,9 @@ int gps_status_get_nmea(location_manager_h manager, char **nmea);
  * @param[out] num_of_active	The number of active satellites
  * @param[out] num_of_inview	The number of satellites in view
  * @param[out] timestamp		The timestamp (time when measurement took place or @c 0 if valid)
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
- * @retval #LOCATIONS_ERROR_INCORRECT_METHOD		Incorrect method
  * @retval #LOCATIONS_ERROR_SERVICE_NOT_AVAILABLE	Service not available
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
  * @retval #LOCATIONS_ERROR_NOT_SUPPORTED			Not supported
@@ -883,7 +954,7 @@ int gps_status_get_satellite(location_manager_h manager, int *num_of_active, int
  * @param[in] callback		The callback function to register
  * @param[in] interval		The interval [1 ~ 120] (seconds)
  * @param[in] user_data		The user data to be passed to the callback function
- * @return 0 on success, otherwise a negative error value.
+ * @return 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
@@ -904,7 +975,7 @@ int gps_status_set_satellite_updated_cb(location_manager_h manager, gps_status_s
  * @privlevel public
  * @privilege %http://tizen.org/privilege/location
  * @param[in] manager		The location manager handle
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE				Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER	Invalid parameter
  * @retval #LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED The application does not have the privilege to call this method
@@ -922,7 +993,7 @@ int gps_status_unset_satellite_updated_cb(location_manager_h manager);
  * @param[in] manager		The location manager handle
  * @param[in] callback		The iteration callback function
  * @param[in] user_data		The user data to be passed to the callback function
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_INCORRECT_METHOD		Incorrect method
@@ -935,7 +1006,7 @@ int gps_status_unset_satellite_updated_cb(location_manager_h manager);
  * @see	gps_status_get_satellite()
  * @see	gps_status_get_satellites_cb()
  */
-int gps_status_foreach_satellites_in_view (location_manager_h manager, gps_status_get_satellites_cb callback, void *user_data);
+int gps_status_foreach_satellites_in_view(location_manager_h manager, gps_status_get_satellites_cb callback, void *user_data);
 
 /**
  * @brief Gets the last information of satellites.
@@ -947,7 +1018,7 @@ int gps_status_foreach_satellites_in_view (location_manager_h manager, gps_statu
  * @param[out] num_of_active	The last number of active satellites
  * @param[out] num_of_inview	The last number of satellites in view
  * @param[out] timestamp		The last timestamp (time when last measurement took place or @c 0 if valid)
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_INCORRECT_METHOD		Incorrect method
@@ -969,7 +1040,7 @@ int gps_status_get_last_satellite(location_manager_h manager, int *num_of_active
  * @param[in] manager		The location manager handle
  * @param[in] callback		The iteration callback function
  * @param[in] user_data		The user data to be passed to the callback function
- * @return @c 0 on success, otherwise a negative error value.
+ * @return @c 0 on success, otherwise a negative error value
  * @retval #LOCATIONS_ERROR_NONE					Successful
  * @retval #LOCATIONS_ERROR_INVALID_PARAMETER		Invalid argument
  * @retval #LOCATIONS_ERROR_INCORRECT_METHOD		Incorrect method

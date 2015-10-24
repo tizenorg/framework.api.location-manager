@@ -21,40 +21,45 @@
 #include <locations.h>
 #include <dlog.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef LOG_TAG
 #undef LOG_TAG
 #endif
 #define LOG_TAG "CAPI_LOCATION_MANAGER"
 
+
 /*
 * Internal Macros
 */
-
 #define LOCATIONS_LOGD(fmt,args...) LOGD(fmt, ##args)
 #define LOCATIONS_LOGW(fmt,args...) LOGW(fmt, ##args)
 #define LOCATIONS_LOGI(fmt,args...) LOGI(fmt, ##args)
 #define LOCATIONS_LOGE(fmt,args...) LOGE(fmt, ##args)
 
 #define LOCATIONS_CHECK_CONDITION(condition, error, msg)	\
-		do { \
-			if (condition) { \
-			} else { \
-				LOCATIONS_LOGE("%s(0x%08x)", msg, error); \
-				return error; \
-			} \
-		} while (0)
+	do { \
+		if (condition) { \
+		} else { \
+			LOCATIONS_LOGE("%s(0x%08x)", msg, error); \
+			return error; \
+		} \
+	} while (0)
 
 
 #define LOCATIONS_PRINT_ERROR_CODE(error, msg)	\
-		do { \
-			LOCATIONS_LOGE("%s(0x%08x)", msg, error); \
-			return error; \
-		} while (0)
+	do { \
+		LOCATIONS_LOGE("%s(0x%08x)", msg, error); \
+		return error; \
+	} while (0)
 
+#define LOCATIONS_NULL_ARG_CHECK(arg)	\
+	LOCATIONS_CHECK_CONDITION((arg != NULL),LOCATION_BOUNDS_ERROR_INVALID_PARAMETER,"LOCATION_BOUNDS_ERROR_INVALID_PARAMETER") \
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define LOCATIONS_NOT_SUPPORTED_CHECK(arg)	\
+	LOCATIONS_CHECK_CONDITION((arg == LOCATIONS_ERROR_NONE),LOCATIONS_ERROR_NOT_SUPPORTED,"LOCATIONS_ERROR_NOT_SUPPORTED") \
 
 typedef enum {
 	_LOCATIONS_EVENT_TYPE_SERVICE_STATE,
@@ -66,6 +71,8 @@ typedef enum {
 	_LOCATIONS_EVENT_TYPE_COLLECTION_STATE,
 	_LOCATIONS_EVENT_TYPE_LOCATION,
 	_LOCATIONS_EVENT_TYPE_BATCH,
+	_LOCATIONS_EVENT_TYPE_DISTANCE,
+	_LOCATIONS_EVENT_TYPE_POS_VEL,
 	_LOCATIONS_EVENT_TYPE_NUM
 } _location_event_e;
 
@@ -82,9 +89,9 @@ typedef enum {
 } _location_signal_e;
 
 typedef struct _location_manager_s {
-	LocationObject* object;
-	const void* user_cb[_LOCATIONS_EVENT_TYPE_NUM];
-	void* user_data[_LOCATIONS_EVENT_TYPE_NUM];
+	LocationObject *object;
+	const void *user_cb[_LOCATIONS_EVENT_TYPE_NUM];
+	void *user_data[_LOCATIONS_EVENT_TYPE_NUM];
 	location_method_e method;
 	bool is_continue_foreach_bounds;
 	int collection_state;
@@ -94,9 +101,9 @@ typedef struct _location_manager_s {
 } location_manager_s;
 
 typedef struct _location_bounds_s {
-	LocationBoundary* boundary;
-	const void* user_cb;
-	void* user_data;
+	LocationBoundary *boundary;
+	const void *user_cb;
+	void *user_data;
 	bool is_added;
 } location_bounds_s;
 
@@ -105,6 +112,16 @@ typedef struct _location_setting_changed_s {
 	void *user_data;
 } location_setting_changed_s;
 
+/*
+* Internal Functions
+*/
+int __convert_error_code(int code);
+int __is_gps_supported(void);
+int __is_gps_satellite_supported(void);
+int __is_wps_supported(void);
+int __is_location_supported(void);
+int __set_callback(_location_event_e type, location_manager_h manager, void *callback, void *user_data);
+int __unset_callback(_location_event_e type, location_manager_h manager);
 
 #ifdef __cplusplus
 }

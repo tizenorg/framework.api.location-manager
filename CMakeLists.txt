@@ -8,13 +8,12 @@ SET(CMAKE_INSTALL_PREFIX /usr)
 SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 
 SET(INC_DIR include)
-
 INCLUDE_DIRECTORIES(${INC_DIR})
 
-INCLUDE(FindPkgConfig)
-pkg_check_modules(dependents REQUIRED dlog location capi-base-common capi-system-info)
-
 SET(pc_dependents "capi-base-common")
+
+INCLUDE(FindPkgConfig)
+	pkg_check_modules(dependents REQUIRED dlog location capi-base-common capi-system-info)
 
 FOREACH(flag ${dependents_CFLAGS})
 	SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} ${flag}")

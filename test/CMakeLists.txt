@@ -7,7 +7,7 @@ FOREACH(flag ${${fw_test}_CFLAGS})
 	SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} ${flag}")
 ENDFOREACH(flag)
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} -Wall -Werror")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} -Wall")
 
 aux_source_directory(. sources)
 FOREACH(src ${sources})
@@ -17,3 +17,6 @@ FOREACH(src ${sources})
 	TARGET_LINK_LIBRARIES(${src_name} ${fw_name} ${${fw_test}_LDFLAGS})
 ENDFOREACH()
 
+INSTALL(TARGETS ${src_name} DESTINATION /opt/usr/devel/location/)
+INSTALL(FILES ${fw_test}.efl DESTINATION /etc/smack/accesses.d)
+INSTALL(FILES ${fw_test}.xml DESTINATION /usr/share/packages)

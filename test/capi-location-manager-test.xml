@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://tizen.org/ns/packages" package="capi-location-manager-test" version="1.0.0" install-location="internal-only">
+	<label>Location</label>
+	<author email="youngae.kang@samsung.com" href="www.samsung.com">Youngae kang</author>
+	<author email="kj7.sung@samsung.com" href="www.samsung.com">Kyoungjun Sung</author>
+	<description>Location Manager Test</description>
+	<privileges>
+		<privilege>http://tizen.org/privilege/location</privilege>
+		<privilege>http://tizen.org/privilege/location.enable</privilege>
+	</privileges>
+	<ui-application appid="capi-location-manager-test" exec="/opt/usr/devel/location/location-test" nodisplay="true" multiple="false" type="capp" taskmanage="false" launch_mode="single">
+		<label>Location Manager Test</label>
+	</ui-application>
+</manifest>

@@ -66,19 +66,19 @@ int location_manager_set_location_batch_cb(location_manager_h manager, location_
  * @brief Unregisters the callback function.
  * @param[in] manager			The location manager handle
  */
-int location_manager_unset_location_batch_cb (location_manager_h manager);
+int location_manager_unset_location_batch_cb(location_manager_h manager);
 
 /**
  * @brief Start the location batch mode.
  * @param[in] manager			The location manager handle
  */
-int location_manager_start_batch (location_manager_h manager);
+int location_manager_start_batch(location_manager_h manager);
 
 /**
  * @brief Stop the location batch mode.
  * @param[in] manager		The location manager handle
  */
-int location_manager_stop_batch (location_manager_h manager);
+int location_manager_stop_batch(location_manager_h manager);
 
 /**
  * @brief Retrieves all location information by invoking a specific callback for each location data.
