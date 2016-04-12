@@ -122,33 +122,32 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="https://developer.tizen.org/development/tools/native-tools/manifest-text-editor#feature"><b>Feature Element</b>.</a>
  *
  */
 
 /**
-* @ingroup CAPI_LOCATION_MANAGER_MODULE
-* @defgroup CAPI_LOCATION_GPS_STATUS_MODULE GPS Status & Satellite
-* @brief The GPS Status & Satellite API provides functions to acquire information about GPS satellites in range and in use.
-*
-* @section CAPI_LOCATION_GPS_STATUS_MODULE_HEADER Required Header
-*   \#include <locations.h>
-*
-* @section CAPI_LOCATION_GPS_STATUS_MODULE_OVERVIEW Overview
-*  The GPS Status & Satellite API provides functions to acquire data on satellites that are currently visible to the device. Information
-*  like azimuth and elevation of each satellite is available, along with number of satellites in range and in use.
-*
-* @par System Info note:
-* All of the functions require a started location manager with the #LOCATIONS_METHOD_GPS method set. See the Location Manager API for details.
-*
-* The gps_status_get_nmea() function gets NMEA data from the GPS system.  NMEA 0183 (or NMEA for short) is a combined electrical and data
-* specification for communication between electronic devices. NMEA standard uses a simple ASCII, serial communications protocol that
-* defines how data is transmitted in a "sentence" from one "talker"  to multiple "listeners" at a time. For more details, see <a href = "http://en.wikipedia.org/wiki/NMEA_0183">NMEA_0183</a>.
-*
-* The gps_status_get_satellite() method returns a count of satellites in view. The gps_status_foreach_satellites_in_view() method is an
-* iterator which will invoke a callback function for each satellite in view. The  gps_status_get_satellite() method returns a count of
-* satellites in use.
-*
+ * @ingroup CAPI_LOCATION_MANAGER_MODULE
+ * @defgroup CAPI_LOCATION_GPS_STATUS_MODULE GPS Status & Satellite
+ * @brief The GPS Status & Satellite API provides functions to acquire information about GPS satellites in range and in use.
+ *
+ * @section CAPI_LOCATION_GPS_STATUS_MODULE_HEADER Required Header
+ *   \#include <locations.h>
+ *
+ * @section CAPI_LOCATION_GPS_STATUS_MODULE_OVERVIEW Overview
+ *  The GPS Status & Satellite API provides functions to acquire data on satellites that are currently visible to the device. Information
+ *  like azimuth and elevation of each satellite is available, along with number of satellites in range and in use.
+ *
+ * @par System Info note:
+ * All of the functions require a started location manager with the #LOCATIONS_METHOD_GPS method set. See the Location Manager API for details.
+ *
+ * The gps_status_get_nmea() function gets NMEA data from the GPS system.  NMEA 0183 (or NMEA for short) is a combined electrical and data
+ * specification for communication between electronic devices. NMEA standard uses a simple ASCII, serial communications protocol that
+ * defines how data is transmitted in a "sentence" from one "talker"  to multiple "listeners" at a time. For more details, see <a href = "http://en.wikipedia.org/wiki/NMEA_0183">NMEA_0183</a>.
+ *
+ * The gps_status_get_satellite() method returns a count of satellites in view. The gps_status_foreach_satellites_in_view() method is an
+ * iterator which will invoke a callback function for each satellite in view. The  gps_status_get_satellite() method returns a count of satellites in use.
+ *
  * @section CAPI_LOCATION_GPS_STATUS_MODULE_FEATURE Related Features
  * This API is related with the following features:\n
  *	- http://tizen.org/feature/location\n
@@ -161,7 +160,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="https://developer.tizen.org/development/tools/native-tools/manifest-text-editor#feature"><b>Feature Element</b>.</a>
  *
 */
 
@@ -191,7 +190,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="https://developer.tizen.org/development/tools/native-tools/manifest-text-editor#feature"><b>Feature Element</b>.</a>
  *
  */
 
@@ -221,7 +220,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="https://developer.tizen.org/development/tools/native-tools/manifest-text-editor#feature"><b>Feature Element</b>.</a>
  * @}
  *
  */

@@ -1469,7 +1469,14 @@ EXPORT_API int gps_status_set_satellite_updated_cb(location_manager_h manager, g
 	LOCATIONS_NULL_ARG_CHECK(callback);
 
 	location_manager_s *handle = (location_manager_s *) manager;
-	location_set_option(handle->object, "USE_SV");
+	int ret = location_set_option(handle->object, "USE_SV");
+	if (ret != LOCATION_ERROR_NONE) {
+		if (ret == LOCATION_ERROR_NOT_ALLOWED) {
+			LOCATIONS_LOGE("LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED");
+			return LOCATIONS_ERROR_ACCESSIBILITY_NOT_ALLOWED;
+		}
+		return ret;
+	}
 	g_object_set(handle->object, "sat-interval", interval, NULL);
 	return __set_callback(_LOCATIONS_EVENT_TYPE_SATELLITE, manager, callback, user_data);
 }
